@@ -84,7 +84,7 @@ local function HopServer()
     end 
 end
 spawn(function()
-    while wait(7) do 
+    while wait(1) do 
         if game:GetService'GuiService':GetErrorCode().Value == 772 then 
             Plr:Kick()
         end
