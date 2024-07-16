@@ -5,7 +5,7 @@ repeat wait() until Plr.Character
 repeat wait() until Plr.Character:FindFirstChild("HumanoidRootPart")
 repeat wait() until Plr.Character:FindFirstChild("Humanoid")
 local TeleportService = game:GetService("TeleportService")
-unitname = getgenv().UnitName:gsub(" ","")
+
 local Plrgui = game:GetService("Players").LocalPlayer.PlayerGui
 
 local function ConvertGradientToRGB(v, num)
@@ -47,15 +47,7 @@ local function GetRandomUnit()
     end
 end
 
-local function DetectUID(x)
-    for i,v in next,getupvalues(getsenv(Plrgui.Lobby.UnitFrame.UnitInvHandler).UpdateInventory)[1]._data.Inventory.Troops do 
-        if i == x  then 
-            for i1,v1 in next,v do 
-                return i1 
-            end
-        end
-    end
-end
+
 -- Function to click a GUI button
 local function ClickButton(a)
     game:GetService("GuiService").SelectedObject = a
@@ -91,9 +83,9 @@ local function Random(Length)
     end
     return string.char(table.unpack(pw))
 end
-local function SendWebHook(PlayerName,Unit)
+local function SendWebHook(PlayerName,Gem)
     local msg = {
-        ['content'] = 'Send Unit Success',
+        ['content'] = 'Send Gem Success',
         ["embeds"] = {{
             ["title"] = "Toilet Tower Defense",
             ["description"] = getgenv().UnitName,
@@ -106,8 +98,8 @@ local function SendWebHook(PlayerName,Unit)
                     ["inline"] = false
                 },
                 {
-                    ["name"] = "Unit name",
-                    ["value"] =Unit,                                            
+                    ["name"] = "Gem",
+                    ["value"] =Gem,                                            
                     ["inline"] = false
                 }
             }
@@ -128,51 +120,25 @@ spawn(function()
         pcall(function()
             if DetectInvoke() ~= nil then
                 wait(6)
-                
+                print("Step 8: DetectInvoke is not nil")
                 for i, v in pairs(getgenv().PlayerList) do
-                    local Unit = DetectUID(unitname)
-                    if Unit then 
-                        local Unit_only = {
+                    local for_gem = string.char(math.random(97, 122))
+                    local gem_only = {
+                        [1] = {
                             [1] = {
-                                [1] = {
-                                    [1] = Random(64),
-                                    [2] = v,
-                                    [3] = 'Troops',
-                                    [4] = Unit,
-                                    [5] = 0,
-                                    [6] = ""
-                                },
-                                [2] = DetectInvoke()
-                            }
+                                [1] = Random(64),
+                                [2] = v,
+                                [3] = for_gem,
+                                [4] = for_gem,
+                                [5] = getgenv().Gem,
+                                [6] = ""
+                            },
+                            [2] = DetectInvoke()
                         }
+                    }
 
-                        game:GetService("ReplicatedStorage"):WaitForChild("dataRemoteEvent"):FireServer(unpack(Unit_only))
-                        SendWebHook(game:GetService("Players"):GetNameFromUserIdAsync(v),getgenv().UnitName)
-                    else 
-                        local msg = {
-                            ['content'] = 'Send Unit Lỗi',
-                            ["embeds"] = {{
-                                ["title"] = "Toilet Tower Defense",
-                                ["description"] = getgenv().UnitName,
-                                ["type"] = "rich",
-                                ["color"] = tonumber(0xbdce44),
-                                ["fields"] = {
-                                    {
-                                        ["name"] = "Reason",
-                                        ["value"] = "Acc không còn tồn unit",                                            
-                                        ["inline"] = false
-                                    },
-                                    
-                                }
-                            }}
-                        }
-                        request({
-                            Url = getgenv().Webhook,
-                            Method = "POST",
-                            Headers = {["Content-Type"] = "application/json"},
-                            Body = game:GetService("HttpService"):JSONEncode(msg)
-                        }) 
-                    end
+                    game:GetService("ReplicatedStorage"):WaitForChild("dataRemoteEvent"):FireServer(unpack(gem_only))
+                    SendWebHook(game:GetService("Players"):GetNameFromUserIdAsync(v),getgenv().Gem)
                     wait(6)
                 end
                 getgenv().SendGemToggle = false 
@@ -194,10 +160,10 @@ spawn(function()
                                 end
                             else 
                                 local msg = {
-                                    ['content'] = 'Send Unit Lỗi',
+                                    ['content'] = 'Send Gem Lỗi',
                                     ["embeds"] = {{
                                         ["title"] = "Toilet Tower Defense",
-                                        ["description"] = "",
+                                        ["description"] = getgenv().UnitName,
                                         ["type"] = "rich",
                                         ["color"] = tonumber(0xbdce44),
                                         ["fields"] = {
